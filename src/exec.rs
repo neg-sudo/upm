@@ -29,9 +29,11 @@ impl Runner {
         let mut cmd = Command::new(&argv[0]);
         cmd.args(&argv[1..]);
         if self.quiet {
-            cmd.stdin(Stdio::null())
+            // Keep stdin/stderr so sudo can still prompt for a password and
+            // backend errors are never hidden.
+            cmd.stdin(Stdio::inherit())
                 .stdout(Stdio::null())
-                .stderr(Stdio::null());
+                .stderr(Stdio::inherit());
         } else {
             cmd.stdin(Stdio::inherit())
                 .stdout(Stdio::inherit())

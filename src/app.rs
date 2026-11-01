@@ -123,7 +123,16 @@ fn run_action(
     runner: &Runner,
 ) -> Result<()> {
     if plan.is_empty() {
-        output::success("nothing to do");
+        if cli.json {
+            output::json(&ActionReport {
+                action,
+                dry_run: cli.dry_run,
+                packages: Vec::new(),
+                commands: Vec::new(),
+            })?;
+        } else {
+            output::success("nothing to do");
+        }
         return Ok(());
     }
 
@@ -264,7 +273,16 @@ fn cmd_update(
     }
 
     if tasks.is_empty() {
-        output::info("nothing to update");
+        if cli.json {
+            output::json(&AllReport {
+                action: "update",
+                dry_run: cli.dry_run,
+                backends: Vec::new(),
+                commands: Vec::new(),
+            })?;
+        } else {
+            output::info("nothing to update");
+        }
         return Ok(());
     }
 
