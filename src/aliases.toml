@@ -1,0 +1,658 @@
+# upm alias registry
+#
+# Canonical name -> native package name per backend.
+# Missing keys are fine: upm falls back to searching the backend, then to the
+# raw name. Override or extend these in ~/.config/upm/config.toml:
+#
+#   [packages.nodejs]
+#   apt = "nodejs"
+#
+# Homebrew casks are written as "cask:<name>".
+
+[packages.nodejs]
+brew = "node"
+apt = "nodejs"
+dnf = "nodejs"
+pacman = "nodejs"
+zypper = "nodejs"
+winget = "OpenJS.NodeJS"
+scoop = "nodejs"
+choco = "nodejs"
+
+[packages.python]
+brew = "python@3.12"
+apt = "python3"
+dnf = "python3"
+pacman = "python"
+zypper = "python3"
+winget = "Python.Python.3.12"
+scoop = "python"
+choco = "python3"
+
+[packages.git]
+brew = "git"
+apt = "git"
+dnf = "git"
+pacman = "git"
+zypper = "git"
+winget = "Git.Git"
+scoop = "git"
+choco = "git"
+
+[packages.go]
+brew = "go"
+apt = "golang-go"
+dnf = "golang"
+pacman = "go"
+zypper = "go"
+winget = "GoLang.Go"
+scoop = "go"
+choco = "golang"
+
+[packages.rust]
+brew = "rustup"
+apt = "rustup"
+dnf = "rustup"
+pacman = "rustup"
+zypper = "rustup"
+winget = "Rustlang.Rustup"
+scoop = "rustup"
+choco = "rustup"
+
+[packages.gh]
+brew = "gh"
+apt = "gh"
+dnf = "gh"
+pacman = "github-cli"
+zypper = "gh"
+winget = "GitHub.cli"
+scoop = "gh"
+choco = "gh"
+
+[packages.jq]
+brew = "jq"
+apt = "jq"
+dnf = "jq"
+pacman = "jq"
+zypper = "jq"
+winget = "jqlang.jq"
+scoop = "jq"
+choco = "jq"
+
+[packages.yq]
+brew = "yq"
+apt = "yq"
+dnf = "yq"
+zypper = "yq"
+winget = "mikefarah.yq"
+scoop = "yq"
+choco = "yq"
+
+[packages.ripgrep]
+brew = "ripgrep"
+apt = "ripgrep"
+dnf = "ripgrep"
+pacman = "ripgrep"
+zypper = "ripgrep"
+winget = "BurntSushi.ripgrep.MSVC"
+scoop = "ripgrep"
+choco = "ripgrep"
+
+[packages.fd]
+brew = "fd"
+apt = "fd-find"
+dnf = "fd-find"
+pacman = "fd"
+zypper = "fd"
+winget = "sharkdp.fd"
+scoop = "fd"
+choco = "fd"
+
+[packages.fzf]
+brew = "fzf"
+apt = "fzf"
+dnf = "fzf"
+pacman = "fzf"
+zypper = "fzf"
+winget = "junegunn.fzf"
+scoop = "fzf"
+choco = "fzf"
+
+[packages.bat]
+brew = "bat"
+apt = "bat"
+dnf = "bat"
+pacman = "bat"
+zypper = "bat"
+winget = "sharkdp.bat"
+scoop = "bat"
+choco = "bat"
+
+[packages.eza]
+brew = "eza"
+apt = "eza"
+dnf = "eza"
+pacman = "eza"
+zypper = "eza"
+winget = "eza-community.eza"
+scoop = "eza"
+choco = "eza"
+
+[packages.zoxide]
+brew = "zoxide"
+apt = "zoxide"
+dnf = "zoxide"
+pacman = "zoxide"
+zypper = "zoxide"
+winget = "ajeetdsouza.zoxide"
+scoop = "zoxide"
+choco = "zoxide"
+
+[packages.tmux]
+brew = "tmux"
+apt = "tmux"
+dnf = "tmux"
+pacman = "tmux"
+zypper = "tmux"
+
+[packages.neovim]
+brew = "neovim"
+apt = "neovim"
+dnf = "neovim"
+pacman = "neovim"
+zypper = "neovim"
+winget = "Neovim.Neovim"
+scoop = "neovim"
+choco = "neovim"
+
+[packages.vim]
+brew = "vim"
+apt = "vim"
+dnf = "vim"
+pacman = "vim"
+zypper = "vim"
+winget = "vim.vim"
+scoop = "vim"
+choco = "vim"
+
+[packages.emacs]
+brew = "emacs"
+apt = "emacs"
+dnf = "emacs"
+pacman = "emacs"
+zypper = "emacs"
+winget = "GNU.Emacs"
+scoop = "emacs"
+choco = "emacs"
+
+[packages.curl]
+brew = "curl"
+apt = "curl"
+dnf = "curl"
+pacman = "curl"
+zypper = "curl"
+winget = "cURL.cURL"
+scoop = "curl"
+choco = "curl"
+
+[packages.wget]
+brew = "wget"
+apt = "wget"
+dnf = "wget"
+pacman = "wget"
+zypper = "wget"
+scoop = "wget"
+choco = "wget"
+
+[packages.htop]
+brew = "htop"
+apt = "htop"
+dnf = "htop"
+pacman = "htop"
+zypper = "htop"
+
+[packages.btop]
+brew = "btop"
+apt = "btop"
+dnf = "btop"
+pacman = "btop"
+zypper = "btop"
+winget = "aristocratos.btop4win"
+scoop = "btop"
+choco = "btop"
+
+[packages.tree]
+brew = "tree"
+apt = "tree"
+dnf = "tree"
+pacman = "tree"
+zypper = "tree"
+scoop = "tree"
+choco = "tree"
+
+[packages.unzip]
+brew = "unzip"
+apt = "unzip"
+dnf = "unzip"
+pacman = "unzip"
+zypper = "unzip"
+
+[packages.7zip]
+brew = "sevenzip"
+apt = "p7zip-full"
+dnf = "p7zip"
+pacman = "p7zip"
+zypper = "p7zip"
+winget = "7zip.7zip"
+scoop = "7zip"
+choco = "7zip"
+
+[packages.ffmpeg]
+brew = "ffmpeg"
+apt = "ffmpeg"
+dnf = "ffmpeg"
+pacman = "ffmpeg"
+zypper = "ffmpeg"
+winget = "Gyan.FFmpeg"
+scoop = "ffmpeg"
+choco = "ffmpeg"
+
+[packages.imagemagick]
+brew = "imagemagick"
+apt = "imagemagick"
+dnf = "ImageMagick"
+pacman = "imagemagick"
+zypper = "ImageMagick"
+winget = "ImageMagick.ImageMagick"
+scoop = "imagemagick"
+choco = "imagemagick"
+
+[packages.docker]
+brew = "cask:docker"
+apt = "docker.io"
+dnf = "docker"
+pacman = "docker"
+zypper = "docker"
+winget = "Docker.DockerDesktop"
+scoop = "docker"
+choco = "docker-desktop"
+
+[packages.kubectl]
+brew = "kubectl"
+apt = "kubectl"
+dnf = "kubernetes-client"
+pacman = "kubectl"
+zypper = "kubernetes-client"
+winget = "Kubernetes.kubectl"
+scoop = "kubectl"
+choco = "kubernetes-cli"
+
+[packages.helm]
+brew = "helm"
+apt = "helm"
+dnf = "helm"
+pacman = "helm"
+zypper = "helm"
+winget = "Helm.Helm"
+scoop = "helm"
+choco = "helm"
+
+[packages.terraform]
+brew = "terraform"
+apt = "terraform"
+dnf = "terraform"
+pacman = "terraform"
+zypper = "terraform"
+winget = "Hashicorp.Terraform"
+scoop = "terraform"
+choco = "terraform"
+
+[packages.awscli]
+brew = "awscli"
+apt = "awscli"
+dnf = "awscli"
+pacman = "aws-cli"
+zypper = "aws-cli"
+winget = "Amazon.AWSCLI"
+scoop = "aws"
+choco = "awscli"
+
+[packages.gcloud]
+brew = "cask:google-cloud-sdk"
+apt = "google-cloud-sdk"
+dnf = "google-cloud-sdk"
+pacman = "google-cloud-cli"
+zypper = "google-cloud-cli"
+winget = "Google.CloudSDK"
+scoop = "gcloud"
+choco = "gcloudsdk"
+
+[packages.azurecli]
+brew = "azure-cli"
+apt = "azure-cli"
+dnf = "azure-cli"
+pacman = "azure-cli"
+zypper = "azure-cli"
+winget = "Microsoft.AzureCLI"
+scoop = "azure-cli"
+choco = "azure-cli"
+
+[packages.code]
+brew = "cask:visual-studio-code"
+apt = "code"
+dnf = "code"
+pacman = "code"
+zypper = "code"
+winget = "Microsoft.VisualStudioCode"
+scoop = "vscode"
+choco = "vscode"
+
+[packages.firefox]
+brew = "cask:firefox"
+apt = "firefox"
+dnf = "firefox"
+pacman = "firefox"
+zypper = "firefox"
+winget = "Mozilla.Firefox"
+scoop = "firefox"
+choco = "firefox"
+
+[packages.chrome]
+brew = "cask:google-chrome"
+apt = "google-chrome-stable"
+dnf = "google-chrome-stable"
+pacman = "google-chrome"
+zypper = "google-chrome-stable"
+winget = "Google.Chrome"
+scoop = "googlechrome"
+choco = "googlechrome"
+
+[packages.chromium]
+brew = "cask:chromium"
+apt = "chromium-browser"
+dnf = "chromium"
+pacman = "chromium"
+zypper = "chromium"
+winget = "Chromium.Chromium"
+scoop = "chromium"
+choco = "chromium"
+
+[packages.brave]
+brew = "cask:brave-browser"
+apt = "brave-browser"
+dnf = "brave-browser"
+pacman = "brave-bin"
+zypper = "brave-browser"
+winget = "Brave.Brave"
+scoop = "brave"
+choco = "brave"
+
+[packages.vlc]
+brew = "cask:vlc"
+apt = "vlc"
+dnf = "vlc"
+pacman = "vlc"
+zypper = "vlc"
+winget = "VideoLAN.VLC"
+scoop = "vlc"
+choco = "vlc"
+
+[packages.gimp]
+brew = "cask:gimp"
+apt = "gimp"
+dnf = "gimp"
+pacman = "gimp"
+zypper = "gimp"
+winget = "GIMP.GIMP"
+scoop = "gimp"
+choco = "gimp"
+
+[packages.inkscape]
+brew = "cask:inkscape"
+apt = "inkscape"
+dnf = "inkscape"
+pacman = "inkscape"
+zypper = "inkscape"
+winget = "Inkscape.Inkscape"
+scoop = "inkscape"
+choco = "inkscape"
+
+[packages.obs]
+brew = "cask:obs"
+apt = "obs-studio"
+dnf = "obs-studio"
+pacman = "obs-studio"
+zypper = "obs-studio"
+winget = "OBSProject.OBSStudio"
+scoop = "obs-studio"
+choco = "obs-studio"
+
+[packages.libreoffice]
+brew = "cask:libreoffice"
+apt = "libreoffice"
+dnf = "libreoffice"
+pacman = "libreoffice-fresh"
+zypper = "libreoffice"
+winget = "TheDocumentFoundation.LibreOffice"
+scoop = "libreoffice"
+choco = "libreoffice-fresh"
+
+[packages.java]
+brew = "openjdk"
+apt = "default-jdk"
+dnf = "java-21-openjdk"
+pacman = "jdk-openjdk"
+zypper = "java-21-openjdk"
+winget = "EclipseAdoptium.Temurin.21.JDK"
+scoop = "openjdk"
+choco = "openjdk"
+
+[packages.maven]
+brew = "maven"
+apt = "maven"
+dnf = "maven"
+pacman = "maven"
+zypper = "maven"
+winget = "Apache.Maven"
+scoop = "maven"
+choco = "maven"
+
+[packages.gradle]
+brew = "gradle"
+apt = "gradle"
+dnf = "gradle"
+pacman = "gradle"
+zypper = "gradle"
+winget = "Gradle.Gradle"
+scoop = "gradle"
+choco = "gradle"
+
+[packages.cmake]
+brew = "cmake"
+apt = "cmake"
+dnf = "cmake"
+pacman = "cmake"
+zypper = "cmake"
+winget = "Kitware.CMake"
+scoop = "cmake"
+choco = "cmake"
+
+[packages.ninja]
+brew = "ninja"
+apt = "ninja-build"
+dnf = "ninja-build"
+pacman = "ninja"
+zypper = "ninja"
+winget = "Ninja-build.Ninja"
+scoop = "ninja"
+choco = "ninja"
+
+[packages.clang]
+brew = "llvm"
+apt = "clang"
+dnf = "clang"
+pacman = "clang"
+zypper = "clang"
+winget = "LLVM.LLVM"
+scoop = "llvm"
+choco = "llvm"
+
+[packages.gcc]
+brew = "gcc"
+apt = "gcc"
+dnf = "gcc"
+pacman = "gcc"
+zypper = "gcc"
+scoop = "gcc"
+choco = "mingw"
+
+[packages.make]
+brew = "make"
+apt = "make"
+dnf = "make"
+pacman = "make"
+zypper = "make"
+scoop = "make"
+choco = "make"
+
+[packages.dotnet]
+brew = "dotnet"
+apt = "dotnet-sdk-8.0"
+dnf = "dotnet-sdk-8.0"
+pacman = "dotnet-sdk"
+zypper = "dotnet-sdk-8.0"
+winget = "Microsoft.DotNet.SDK.8"
+scoop = "dotnet-sdk"
+choco = "dotnet-sdk"
+
+[packages.powershell]
+brew = "cask:powershell"
+apt = "powershell"
+dnf = "powershell"
+pacman = "powershell"
+zypper = "powershell"
+winget = "Microsoft.PowerShell"
+scoop = "powershell"
+choco = "powershell"
+
+[packages.yarn]
+brew = "yarn"
+apt = "yarnpkg"
+dnf = "yarn"
+pacman = "yarn"
+zypper = "yarn"
+winget = "Yarn.Yarn"
+scoop = "yarn"
+choco = "yarn"
+
+[packages.pnpm]
+brew = "pnpm"
+dnf = "pnpm"
+pacman = "pnpm"
+zypper = "pnpm"
+winget = "pnpm.pnpm"
+scoop = "pnpm"
+choco = "pnpm"
+
+[packages.bun]
+brew = "bun"
+winget = "Oven-sh.Bun"
+scoop = "bun"
+choco = "bun"
+
+[packages.deno]
+brew = "deno"
+apt = "deno"
+dnf = "deno"
+pacman = "deno"
+zypper = "deno"
+winget = "DenoLand.Deno"
+scoop = "deno"
+choco = "deno"
+
+[packages.postgresql]
+brew = "postgresql@16"
+apt = "postgresql"
+dnf = "postgresql-server"
+pacman = "postgresql"
+zypper = "postgresql-server"
+winget = "PostgreSQL.PostgreSQL"
+scoop = "postgresql"
+choco = "postgresql"
+
+[packages.mysql]
+brew = "mysql"
+apt = "mysql-server"
+dnf = "mysql-server"
+pacman = "mariadb"
+zypper = "mariadb"
+winget = "Oracle.MySQL"
+scoop = "mysql"
+choco = "mysql"
+
+[packages.sqlite]
+brew = "sqlite"
+apt = "sqlite3"
+dnf = "sqlite"
+pacman = "sqlite"
+zypper = "sqlite3"
+winget = "SQLite.SQLite"
+scoop = "sqlite"
+choco = "sqlite"
+
+[packages.redis]
+brew = "redis"
+apt = "redis-server"
+dnf = "redis"
+pacman = "redis"
+zypper = "redis"
+scoop = "redis"
+choco = "redis"
+
+[packages.nginx]
+brew = "nginx"
+apt = "nginx"
+dnf = "nginx"
+pacman = "nginx"
+zypper = "nginx"
+winget = "nginx.nginx"
+scoop = "nginx"
+choco = "nginx"
+
+[packages.caddy]
+brew = "caddy"
+apt = "caddy"
+dnf = "caddy"
+pacman = "caddy"
+zypper = "caddy"
+winget = "CaddyServer.Caddy"
+scoop = "caddy"
+choco = "caddy"
+
+[packages.discord]
+brew = "cask:discord"
+apt = "discord"
+pacman = "discord"
+winget = "Discord.Discord"
+scoop = "discord"
+choco = "discord"
+
+[packages.slack]
+brew = "cask:slack"
+apt = "slack-desktop"
+pacman = "slack-desktop"
+winget = "SlackTechnologies.Slack"
+scoop = "slack"
+choco = "slack"
+
+[packages.spotify]
+brew = "cask:spotify"
+winget = "Spotify.Spotify"
+scoop = "spotify"
+choco = "spotify"
+
+[packages.zoom]
+brew = "cask:zoom"
+winget = "Zoom.Zoom"
+scoop = "zoom"
+choco = "zoom"
