@@ -42,6 +42,58 @@ pub fn code_of(err: &anyhow::Error) -> i32 {
         .unwrap_or(EXIT_ERROR)
 }
 
+/// A short, actionable hint for common backend failures.
+pub fn hint_of(err: &anyhow::Error) -> Option<&'static str> {
+    let text = format!("{err:#}").to_ascii_lowercase();
+    let checks: [(&str, &str); 9] = [
+        (
+            "permission denied",
+            "run with elevated privileges (sudo) or check the backend's permissions",
+        ),
+        (
+            "needs root",
+            "run with elevated privileges (sudo) or check the backend's permissions",
+        ),
+        (
+            "could not get lock",
+            "another package manager is running; wait for it to finish or remove the stale lock",
+        ),
+        (
+            "dpkg was interrupted",
+            "run `sudo dpkg --configure -a`, then retry",
+        ),
+        (
+            "unable to locate package",
+            "refresh metadata with `upm update`, then search with `upm search <term>`",
+        ),
+        (
+            "target not found",
+            "refresh metadata with `upm update`, then search with `upm search <term>`",
+        ),
+        (
+            "could not resolve host",
+            "check your network connection or proxy settings",
+        ),
+        ("timed out", "check your network connection and retry"),
+        ("no space left", "free disk space and retry"),
+    ];
+    checks
+        .iter()
+        .find(|(needle, _)| text.contains(needle))
+        .map(|(_, hint)| *hint)
+        .or_else(|| {
+            if text.contains("not found") || text.contains("no package named") {
+                Some("refresh metadata with `upm update`, then search with `upm search <term>`")
+            } else if text.contains("already installed") || text.contains("same version") {
+                Some("use `upm install --force` to reinstall")
+            } else if text.contains("unsupported") {
+                Some("run `upm capabilities` to see what this backend supports")
+            } else {
+                None
+            }
+        })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -57,5 +109,13 @@ mod tests {
         let err = exit(EXIT_PRIVILEGE, "need root");
         assert_eq!(code_of(&err), EXIT_PRIVILEGE);
         assert!(format!("{err:#}").contains("need root"));
+    }
+
+    #[test]
+    fn hints_match_common_failures() {
+        let err = anyhow::anyhow!("E: Unable to locate package nope");
+        assert!(hint_of(&err).unwrap().contains("upm update"));
+        let err = anyhow::anyhow!("Could not resolve host: github.com");
+        assert!(hint_of(&err).unwrap().contains("network"));
     }
 }

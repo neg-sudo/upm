@@ -42,6 +42,16 @@ impl AliasTable {
             .filter(|value| !value.is_empty())
     }
 
+    pub fn canonical(&self, backend: BackendKind, package: &str) -> Option<&str> {
+        let package = package.trim();
+        self.packages.iter().find_map(|(name, mapping)| {
+            mapping
+                .get(backend.id())
+                .filter(|native| native.eq_ignore_ascii_case(package))
+                .map(|_| name.as_str())
+        })
+    }
+
     pub fn len(&self) -> usize {
         self.packages.len()
     }

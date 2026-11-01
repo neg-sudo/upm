@@ -7,8 +7,11 @@ on:
 permissions:
   contents: write
 
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
-  upload:
+  build:
     name: ${{ matrix.target }}
     strategy:
       fail-fast: false
@@ -27,10 +30,70 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: taiki-e/upload-rust-binary-action@v1
+
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          bin: upm
-          target: ${{ matrix.target }}
-          archive: upm-$target
-          checksum: sha256
-          token: ${{ secrets.GITHUB_TOKEN }}
+          targets: ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
+      - name: Install aarch64 Linux linker
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
+
+      - name: Build
+        shell: bash
+        run: |
+          if [ "${{ matrix.target }}" = "aarch64-unknown-linux-gnu" ]; then
+            export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
+            export CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
+          fi
+          cargo build --locked --release --target ${{ matrix.target }}
+
+      - name: Package (Unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          mkdir -p dist
+          tar -czf "dist/upm-${{ matrix.target }}.tar.gz" \
+            -C "target/${{ matrix.target }}/release" upm
+
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Compress-Archive -Path "target/${{ matrix.target }}/release/upm.exe" `
+            -DestinationPath "dist/upm-${{ matrix.target }}.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: upm-${{ matrix.target }}
+          path: dist/upm-${{ matrix.target }}.*
+          if-no-files-found: error
+
+  release:
+    name: publish release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Generate SHA256SUMS
+        working-directory: dist
+        run: sha256sum upm-* > SHA256SUMS
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/upm-*
+            dist/SHA256SUMS
+          generate_release_notes: true
+          fail_on_unmatched_files: true

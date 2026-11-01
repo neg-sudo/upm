@@ -31,6 +31,29 @@ pub fn distro() -> Option<String> {
     })
 }
 
+pub fn container() -> Option<String> {
+    if std::path::Path::new("/.dockerenv").exists() {
+        return Some("Docker".to_string());
+    }
+    if std::path::Path::new("/run/.containerenv").exists() {
+        return Some("Podman".to_string());
+    }
+    if let Ok(value) = std::env::var("container") {
+        if !value.is_empty() {
+            return Some(value);
+        }
+    }
+    let cgroup = std::fs::read_to_string("/proc/1/cgroup").unwrap_or_default();
+    let lower = cgroup.to_ascii_lowercase();
+    if lower.contains("docker") {
+        Some("Docker".to_string())
+    } else if lower.contains("kubepods") || lower.contains("containerd") {
+        Some("container".to_string())
+    } else {
+        None
+    }
+}
+
 /// Default backend priority for the current OS.
 pub fn priority() -> Vec<BackendKind> {
     if cfg!(target_os = "macos") {

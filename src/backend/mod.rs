@@ -200,32 +200,207 @@ impl Backend {
             BackendKind::Apt => strings(&["apt-cache", "search", term]),
             BackendKind::Dnf => strings(&["dnf", "search", term]),
             BackendKind::Pacman => strings(&["pacman", "-Ss", term]),
-            BackendKind::Zypper => strings(&["zypper", "search", term]),
+            BackendKind::Zypper => strings(&["zypper", "--non-interactive", "search", "-s", term]),
             BackendKind::Winget => {
                 let mut argv = strings(&["winget", "search", term]);
                 argv.push("--accept-source-agreements".into());
                 argv
             }
             BackendKind::Scoop => strings(&["scoop", "search", term]),
-            BackendKind::Choco => strings(&["choco", "search", term]),
+            BackendKind::Choco => strings(&["choco", "search", term, "--limit-output"]),
         }
     }
 
-    pub fn list_cmd(self) -> Vec<String> {
+    pub fn installed_cmd(self) -> Vec<String> {
         match self.kind {
-            BackendKind::Brew => strings(&["brew", "list"]),
-            BackendKind::Apt => strings(&["apt", "list", "--installed"]),
-            BackendKind::Dnf => strings(&["dnf", "list", "--installed"]),
+            BackendKind::Brew => strings(&["brew", "list", "--versions"]),
+            BackendKind::Apt => strings(&[
+                "dpkg-query",
+                "-W",
+                "-f=${db:Status-Abbrev}\\t${Package}\\t${Version}\\n",
+            ]),
+            BackendKind::Dnf | BackendKind::Zypper => {
+                strings(&["rpm", "-qa", "--qf", "%{NAME}\\t%{VERSION}-%{RELEASE}\\n"])
+            }
             BackendKind::Pacman => strings(&["pacman", "-Q"]),
-            BackendKind::Zypper => strings(&["zypper", "search", "--installed-only"]),
             BackendKind::Winget => {
                 let mut argv = strings(&["winget", "list"]);
                 argv.push("--accept-source-agreements".into());
                 argv
             }
             BackendKind::Scoop => strings(&["scoop", "list"]),
-            BackendKind::Choco => strings(&["choco", "list"]),
+            BackendKind::Choco => strings(&["choco", "list", "--limit-output"]),
         }
+    }
+
+    pub fn outdated_cmd(self) -> Vec<String> {
+        match self.kind {
+            BackendKind::Brew => strings(&["brew", "outdated", "--json=v2"]),
+            BackendKind::Apt => strings(&["apt", "list", "--upgradable"]),
+            BackendKind::Dnf => strings(&["dnf", "-q", "list", "--upgrades"]),
+            BackendKind::Pacman => strings(&["pacman", "-Qu"]),
+            BackendKind::Zypper => strings(&["zypper", "--non-interactive", "list-updates"]),
+            BackendKind::Winget => {
+                let mut argv = strings(&["winget", "upgrade"]);
+                argv.push("--accept-source-agreements".into());
+                argv
+            }
+            BackendKind::Scoop => strings(&["scoop", "status"]),
+            BackendKind::Choco => strings(&["choco", "outdated", "--limit-output"]),
+        }
+    }
+
+    pub fn clean_cmds(self, all: bool) -> Vec<Vec<String>> {
+        match self.kind {
+            BackendKind::Brew => {
+                let mut tasks = vec![strings(&["brew", "cleanup"])];
+                if all {
+                    tasks.push(strings(&["brew", "autoremove"]));
+                }
+                tasks
+            }
+            BackendKind::Apt => {
+                let mut tasks = vec![strings(&["apt-get", "autoremove", "-y"])];
+                tasks.push(if all {
+                    strings(&["apt-get", "clean"])
+                } else {
+                    strings(&["apt-get", "autoclean"])
+                });
+                tasks
+            }
+            BackendKind::Dnf => vec![
+                strings(&["dnf", "autoremove", "-y"]),
+                strings(&["dnf", "clean", if all { "all" } else { "packages" }]),
+            ],
+            BackendKind::Pacman => vec![strings(&["pacman", "-Sc", "--noconfirm"])],
+            BackendKind::Zypper => {
+                vec![strings(&["zypper", "--non-interactive", "clean", "--all"])]
+            }
+            BackendKind::Winget | BackendKind::Choco => Vec::new(),
+            BackendKind::Scoop => vec![strings(&["scoop", "cleanup", "*"])],
+        }
+    }
+
+    pub fn pin_cmd(self, package: &str) -> Option<Vec<String>> {
+        let (_, name) = split_cask(package);
+        let argv = match self.kind {
+            BackendKind::Brew => strings(&["brew", "pin", name]),
+            BackendKind::Apt => strings(&["apt-mark", "hold", name]),
+            BackendKind::Dnf => strings(&["dnf", "versionlock", "add", name]),
+            BackendKind::Zypper => strings(&["zypper", "addlock", name]),
+            BackendKind::Winget => strings(&[
+                "winget",
+                "pin",
+                "add",
+                "--id",
+                name,
+                "--exact",
+                "--accept-source-agreements",
+            ]),
+            BackendKind::Scoop => strings(&["scoop", "hold", name]),
+            BackendKind::Choco => strings(&["choco", "pin", "add", "-n", name]),
+            BackendKind::Pacman => return None,
+        };
+        Some(argv)
+    }
+
+    pub fn unpin_cmd(self, package: &str) -> Option<Vec<String>> {
+        let (_, name) = split_cask(package);
+        let argv = match self.kind {
+            BackendKind::Brew => strings(&["brew", "unpin", name]),
+            BackendKind::Apt => strings(&["apt-mark", "unhold", name]),
+            BackendKind::Dnf => strings(&["dnf", "versionlock", "delete", name]),
+            BackendKind::Zypper => strings(&["zypper", "removelock", name]),
+            BackendKind::Winget => strings(&[
+                "winget",
+                "pin",
+                "remove",
+                "--id",
+                name,
+                "--exact",
+                "--accept-source-agreements",
+            ]),
+            BackendKind::Scoop => strings(&["scoop", "unhold", name]),
+            BackendKind::Choco => strings(&["choco", "pin", "remove", "-n", name]),
+            BackendKind::Pacman => return None,
+        };
+        Some(argv)
+    }
+
+    pub fn pins_cmd(self) -> Option<Vec<String>> {
+        let argv = match self.kind {
+            BackendKind::Brew => strings(&["brew", "list", "--pinned"]),
+            BackendKind::Apt => strings(&["apt-mark", "showhold"]),
+            BackendKind::Dnf => strings(&["dnf", "versionlock", "list"]),
+            BackendKind::Zypper => strings(&["zypper", "locks"]),
+            BackendKind::Winget => {
+                let mut argv = strings(&["winget", "pin", "list"]);
+                argv.push("--accept-source-agreements".into());
+                argv
+            }
+            BackendKind::Choco => strings(&["choco", "pin", "list", "--limit-output"]),
+            BackendKind::Pacman | BackendKind::Scoop => return None,
+        };
+        Some(argv)
+    }
+
+    pub fn why_cmd(self, package: &str) -> Option<Vec<String>> {
+        let (_, name) = split_cask(package);
+        let argv = match self.kind {
+            BackendKind::Brew => strings(&["brew", "uses", "--installed", name]),
+            BackendKind::Apt => strings(&["apt-cache", "rdepends", "--installed", name]),
+            BackendKind::Dnf => {
+                strings(&["dnf", "repoquery", "--installed", "--whatrequires", name])
+            }
+            BackendKind::Pacman => strings(&["pactree", "-r", name]),
+            BackendKind::Zypper => strings(&[
+                "zypper",
+                "--non-interactive",
+                "search",
+                "--requires",
+                name,
+                "--installed-only",
+            ]),
+            BackendKind::Winget | BackendKind::Scoop | BackendKind::Choco => return None,
+        };
+        Some(argv)
+    }
+
+    pub fn depends_cmd(self, package: &str) -> Option<Vec<String>> {
+        let (_, name) = split_cask(package);
+        let argv = match self.kind {
+            BackendKind::Brew => strings(&["brew", "deps", name]),
+            BackendKind::Apt => strings(&["apt-cache", "depends", name]),
+            BackendKind::Dnf => strings(&["dnf", "repoquery", "--requires", name]),
+            BackendKind::Pacman => strings(&["pactree", name]),
+            BackendKind::Zypper => strings(&["zypper", "info", "--requires", name]),
+            BackendKind::Winget | BackendKind::Scoop | BackendKind::Choco => return None,
+        };
+        Some(argv)
+    }
+
+    pub fn security_upgrade_cmd(self, yes: bool) -> Option<Vec<String>> {
+        let argv = match self.kind {
+            BackendKind::Dnf => {
+                let mut argv = strings(&["dnf", "upgrade", "--security"]);
+                if yes {
+                    argv.push("-y".into());
+                }
+                argv
+            }
+            BackendKind::Zypper => {
+                let mut argv = strings(&["zypper"]);
+                if yes {
+                    argv.push("--non-interactive".into());
+                }
+                argv.push("patch".into());
+                argv.push("--category".into());
+                argv.push("security".into());
+                argv
+            }
+            _ => return None,
+        };
+        Some(argv)
     }
 
     pub fn info_cmd(self, package: &str) -> Option<Vec<String>> {

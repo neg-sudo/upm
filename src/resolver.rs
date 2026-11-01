@@ -9,6 +9,25 @@ use crate::models::BackendKind;
 use crate::registry::AliasTable;
 use crate::validate;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Reason {
+    Alias,
+    BackendMatch,
+    Fallback,
+    Forced,
+}
+
+impl Reason {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Reason::Alias => "alias",
+            Reason::BackendMatch => "backend-search",
+            Reason::Fallback => "fallback",
+            Reason::Forced => "forced-backend",
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct Resolved {
     /// The name the user typed.
@@ -16,6 +35,7 @@ pub struct Resolved {
     pub backend: Backend,
     /// The native package name for that backend (may include `cask:`).
     pub package: String,
+    pub reason: Reason,
 }
 
 impl Resolved {
@@ -76,6 +96,7 @@ pub fn resolve(
                 requested: name.clone(),
                 backend: *backend,
                 package: package.to_string(),
+                reason: Reason::Alias,
             })
         });
 
@@ -87,6 +108,7 @@ pub fn resolve(
                         requested: name.clone(),
                         backend: *backend,
                         package: name.clone(),
+                        reason: Reason::BackendMatch,
                     });
                     break;
                 }
@@ -98,6 +120,11 @@ pub fn resolve(
             requested: name.clone(),
             backend: candidates[0],
             package: name.clone(),
+            reason: if forced.is_some() {
+                Reason::Forced
+            } else {
+                Reason::Fallback
+            },
         });
 
         resolved.push(resolved_package);
@@ -129,6 +156,8 @@ mod tests {
             dry_run: true,
             assume_yes: true,
             quiet: true,
+            keep_going: false,
+            no_elevate: false,
         };
         assert!(resolve(&[], None, &table, &no_backends(), &runner).is_err());
     }
@@ -140,6 +169,8 @@ mod tests {
             dry_run: true,
             assume_yes: true,
             quiet: true,
+            keep_going: false,
+            no_elevate: false,
         };
         let names = vec!["--force".to_string()];
         assert!(resolve(&names, None, &table, &no_backends(), &runner).is_err());
@@ -151,6 +182,7 @@ mod tests {
             requested: "git".into(),
             backend: Backend::new(BackendKind::Brew),
             package: "git".into(),
+            reason: Reason::Alias,
         };
         assert_eq!(resolved.display_target(), "git");
     }

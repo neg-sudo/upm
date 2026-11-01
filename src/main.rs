@@ -2,13 +2,19 @@
 
 mod app;
 mod backend;
+mod capabilities;
 mod cli;
 mod config;
 mod detect;
 mod error;
 mod exec;
+mod history;
+mod manifest;
 mod models;
 mod output;
+mod parse;
+mod paths;
+mod plan;
 mod registry;
 mod resolver;
 mod validate;
@@ -41,15 +47,21 @@ fn main() -> ExitCode {
 
 fn report(err: &anyhow::Error) -> ExitCode {
     let code = code_of(err);
+    let hint = error::hint_of(err);
     if output::is_json() {
         let payload = serde_json::json!({
+            "schema_version": 1,
             "status": "error",
             "exit_code": code,
             "error": format!("{err:#}"),
+            "hint": hint,
         });
         println!("{payload}");
     } else {
         output::error(&format!("{err:#}"));
+        if let Some(hint) = hint {
+            eprintln!("  {} {hint}", output::dim("hint:"));
+        }
     }
     ExitCode::from(code as u8)
 }

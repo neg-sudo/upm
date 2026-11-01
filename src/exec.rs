@@ -16,6 +16,8 @@ pub struct Runner {
     pub dry_run: bool,
     pub assume_yes: bool,
     pub quiet: bool,
+    pub keep_going: bool,
+    pub no_elevate: bool,
 }
 
 impl Runner {
@@ -66,6 +68,18 @@ impl Runner {
         if !elevate || !needs_sudo() || is_root()? {
             return Ok(argv.to_vec());
         }
+        if self.no_elevate {
+            if self.dry_run {
+                return Ok(argv.to_vec());
+            }
+            return Err(exit(
+                EXIT_PRIVILEGE,
+                format!(
+                    "`{}` needs root privileges but --no-elevate was set",
+                    argv[0]
+                ),
+            ));
+        }
         let mut out = Vec::with_capacity(argv.len() + 1);
         out.push("sudo".to_string());
         out.extend_from_slice(argv);
@@ -114,8 +128,28 @@ pub fn is_admin() -> bool {
     }
 }
 
+fn version_cache() -> &'static std::sync::Mutex<std::collections::HashMap<String, Option<String>>> {
+    static CACHE: std::sync::OnceLock<
+        std::sync::Mutex<std::collections::HashMap<String, Option<String>>>,
+    > = std::sync::OnceLock::new();
+    CACHE.get_or_init(|| std::sync::Mutex::new(std::collections::HashMap::new()))
+}
+
 /// Read the first non-empty line of `<binary> --version`.
 pub fn version_of(binary: &str) -> Option<String> {
+    if let Ok(cache) = version_cache().lock() {
+        if let Some(value) = cache.get(binary) {
+            return value.clone();
+        }
+    }
+    let value = read_version(binary);
+    if let Ok(mut cache) = version_cache().lock() {
+        cache.insert(binary.to_string(), value.clone());
+    }
+    value
+}
+
+fn read_version(binary: &str) -> Option<String> {
     let out = Command::new(binary).arg("--version").output().ok()?;
     let text = if out.stdout.is_empty() {
         String::from_utf8_lossy(&out.stderr).to_string()
@@ -138,6 +172,8 @@ mod tests {
             dry_run: true,
             assume_yes: true,
             quiet: true,
+            keep_going: false,
+            no_elevate: false,
         };
         let argv = vec!["this-binary-does-not-exist".into(), "x".into()];
         assert!(runner.run(&argv, false).is_ok());
@@ -149,6 +185,8 @@ mod tests {
             dry_run: false,
             assume_yes: true,
             quiet: true,
+            keep_going: false,
+            no_elevate: false,
         };
         let argv = vec!["upm-definitely-not-a-binary".into()];
         assert!(runner.run(&argv, false).is_err());

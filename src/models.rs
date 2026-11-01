@@ -20,7 +20,6 @@ pub enum BackendKind {
 }
 
 impl BackendKind {
-    #[cfg(test)]
     pub const ALL: [BackendKind; 8] = [
         BackendKind::Brew,
         BackendKind::Apt,
