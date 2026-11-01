@@ -1,5 +1,5 @@
 # upm installer — Windows (PowerShell)
-# Usage: irm https://raw.githubusercontent.com/zzzit0ti-cell/upm/main/install.ps1 | iex
+# Usage: irm https://raw.githubusercontent.com/neg-sudo/upm/main/install.ps1 | iex
 # Env: UPM_VERSION, UPM_INSTALL_DIR, UPM_TARGET
 
 [CmdletBinding()]
@@ -9,7 +9,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$Repo = "zzzit0ti-cell/upm"
+$Repo = "neg-sudo/upm"
 
 function Write-Info($Message) { Write-Host "ℹ $Message" -ForegroundColor Cyan }
 function Write-Ok($Message) { Write-Host "✓ $Message" -ForegroundColor Green }

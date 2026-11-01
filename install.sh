@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # upm installer — Linux and macOS
-# Usage: curl -fsSL https://raw.githubusercontent.com/zzzit0ti-cell/upm/main/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/neg-sudo/upm/main/install.sh | bash
 # Env: UPM_VERSION, UPM_INSTALL_DIR, UPM_TARGET
 
 set -euo pipefail
 
-REPO="zzzit0ti-cell/upm"
+REPO="neg-sudo/upm"
 VERSION="${UPM_VERSION:-latest}"
 INSTALL_DIR="${UPM_INSTALL_DIR:-$HOME/.local/bin}"
 

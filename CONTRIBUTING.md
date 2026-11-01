@@ -13,7 +13,7 @@ Thanks for helping make `upm` better.
 ## Setup
 
 ```bash
-git clone https://github.com/zzzit0ti-cell/upm.git
+git clone https://github.com/neg-sudo/upm.git
 cd upm
 cargo build
 cargo test --all

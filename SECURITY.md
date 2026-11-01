@@ -32,6 +32,6 @@ native tool.
 ## Reporting
 
 Open a private security advisory at
-`https://github.com/zzzit0ti-cell/upm/security/advisories/new` rather than a
+`https://github.com/neg-sudo/upm/security/advisories/new` rather than a
 public issue. Include a reproduction and the output of `upm --version` and
 `upm which --json`.

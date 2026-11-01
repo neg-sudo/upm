@@ -2,8 +2,8 @@
 
 **Universal Package Manager — one CLI for every platform's package managers.**
 
-[![ci](https://github.com/zzzit0ti-cell/upm/actions/workflows/ci.yml/badge.svg)](https://github.com/zzzit0ti-cell/upm/actions/workflows/ci.yml)
-[![release](https://github.com/zzzit0ti-cell/upm/actions/workflows/release.yml/badge.svg)](https://github.com/zzzit0ti-cell/upm/actions/workflows/release.yml)
+[![ci](https://github.com/neg-sudo/upm/actions/workflows/ci.yml/badge.svg)](https://github.com/neg-sudo/upm/actions/workflows/ci.yml)
+[![release](https://github.com/neg-sudo/upm/actions/workflows/release.yml/badge.svg)](https://github.com/neg-sudo/upm/actions/workflows/release.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-teal.svg)](LICENSE)
 
 `upm` detects the package manager(s) on your machine and gives you one set of
@@ -43,13 +43,13 @@ bash`. It drives the managers you already trust.
 Linux and macOS:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/zzzit0ti-cell/upm/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/neg-sudo/upm/main/install.sh | bash
 ```
 
 Windows (PowerShell):
 
 ```powershell
-irm https://raw.githubusercontent.com/zzzit0ti-cell/upm/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/neg-sudo/upm/main/install.ps1 | iex
 ```
 
 The Unix installer drops a static binary in `~/.local/bin`. The Windows
@@ -61,7 +61,7 @@ to every tagged release with `SHA256SUMS`.
 From source:
 
 ```bash
-git clone https://github.com/zzzit0ti-cell/upm.git
+git clone https://github.com/neg-sudo/upm.git
 cd upm
 cargo build --release
 ./target/release/upm --version
